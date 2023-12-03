@@ -43,17 +43,41 @@ with col2:
     feedback_lottie,
 )
     
-with st.form("entry_form", clear_on_submit=True):
+# Get the user's IP address
+user_ip = st.experimental_get_query_params().get('user_ip')  # Assuming user's IP is passed as a query parameter
 
-    a, b, c, d = st.columns(4, gap="small")
+st.write(user_ip)
 
-    with a:
-        slider_rating = st.slider("**Rate the app!**",1,5)
+# Check if the user has already rated
+if user_ip is not None and db.has_user_rated(user_ip):
+    st.write("You have already rated the app. Thank you for your feedback!")
+else:
+    with st.form("entry_form", clear_on_submit=True):
 
-    submitted = st.form_submit_button("Rate!")
-    if submitted:
-        db.insert_period(slider_rating)
-        st.success("Thank you for your feedback!")
+        a, b, c = st.columns(3, gap="small")
+
+        with a:
+            slider_rating = st.slider("**Rate the app!**",1,5)
+
+        with c:
+            # Obtain the average rating through the database.py script
+            average_rating = db.get_average_rating()
+
+            # Display the average rating
+            if average_rating is not None:
+                st.write(f"**Average Rating: {average_rating:.1f} / 5**")
+
+                # Display stars based on the average rating
+                stars = "⭐️" * int(average_rating)
+                st.write(stars)
+            else:
+                st.write("No ratings available yet.")
+
+
+        submitted = st.form_submit_button("Rate!")
+        if submitted:
+            db.insert_period(slider_rating)
+            st.success("Thank you for your feedback!")
 
 st.write("**Please use the form below for providing any additional feedback or reporting glitches.**")
 
