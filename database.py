@@ -1,7 +1,6 @@
 from deta import Deta
 import os
 from dotenv import load_dotenv
-import streamlit as st
 import uuid
 
 # Load environment variables
