@@ -1,7 +1,8 @@
+# Import all necessary modules
 import streamlit as st
 from streamlit_lottie import st_lottie
 import json
-
+import requests
 import database as db
 
 
@@ -13,20 +14,28 @@ PAGE_ICON = "📢"
 # Set the page configuration to the title and icon variables defined above
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
 
-@st.cache_data
+
+# Create a function to load the lottie gif
 def load_lottie(filepath: str):
     with open(filepath, "r") as f:
         # Use json to load the file
         return json.load(f)
 
+# Load the lottie
+feedback_lottie = load_lottie("feedback.json")
+
+# Create a function to load the css file
 def local_css(file_name):
     with open(file_name) as file:
         st.markdown(f"<style>{file.read()}</style>", unsafe_allow_html=True)
 
+# Call the function and give the css file as the argument
 local_css("styles/main.css")
 
+# Set page header
 st.header("🗣️ Feedback Form")
 
+# Create 2 columns
 col1, col2 = st.columns(2, gap="small")
 
 # Place the instructions in the first column
@@ -35,34 +44,49 @@ with col1:
     st.write("-⭐ Rate the app out of 5!")
     st.write("-📢 Send any feedback regarding glitches or issues you may be facing.")
 
-feedback_lottie = load_lottie("feedback.json")
-
+# In the second column, place the lottie
 with col2:
     st_lottie(
     feedback_lottie,
 )
-    
-# Get the user's IP address
-user_ip = st.experimental_get_query_params().get('user_ip')  # Assuming user's IP is passed as a query parameter
 
-st.write(user_ip)
+### RATING WEBSITE
 
-# Check if the user has already rated
-if user_ip is not None and db.has_user_rated(user_ip):
+# Function to get user's IP address (so that they dont rate the app twice). Use requests for this.
+def get_user_ip():
+    try:
+        return requests.get('https://api64.ipify.org').text
+    except requests.RequestException:
+        return None
+
+# Store the IP in user_ip variable
+user_ip = get_user_ip()
+
+# Set already rated to True if a user_ip exists, and if it is already present in the Deta database file
+already_rated = user_ip is not None and db.has_user_rated(user_ip)
+
+# If already rated is true, then show this message
+if already_rated:
     st.write("You have already rated the app. Thank you for your feedback!")
-else:
-    with st.form("entry_form", clear_on_submit=True):
 
+# Otherwise, show the form
+else:
+    # Create a form
+    with st.form("entry_form", clear_on_submit=True):
+        
+        # Create 3 columns (middle one will be empty so that it is more spaced out)
         a, b, c = st.columns(3, gap="small")
 
+        # Place a slider in the first column
         with a:
             slider_rating = st.slider("**Rate the app!**",1,5)
 
+        # Place the average rating in the third column
         with c:
             # Obtain the average rating through the database.py script
             average_rating = db.get_average_rating()
 
-            # Display the average rating
+            # Display the average rating (if it exists)
             if average_rating is not None:
                 st.write(f"**Average Rating: {average_rating:.1f} / 5**")
 
@@ -72,14 +96,18 @@ else:
             else:
                 st.write("No ratings available yet.")
 
-
+        # Create a button to submit the form
         submitted = st.form_submit_button("Rate!")
         if submitted:
-            db.insert_period(slider_rating)
+            # Save the user's IP in the database and print a success message
+            db.insert_period(slider_rating, user_ip)
             st.success("Thank you for your feedback!")
+
+### ADDITIONAL FEEDBACK FORM
 
 st.write("**Please use the form below for providing any additional feedback or reporting glitches.**")
 
+# Create a contact form using HTML from https://formsubmit.co/ (this is not created by me)
 contact_form = f"""
 <form action="https://formsubmit.co/saaight519@deltalearns.ca" method="POST">
     <input type="hidden" name="_captcha" value="false">
