@@ -109,7 +109,7 @@ st.write("**Please use the form below for providing any additional feedback or r
 
 # Create a contact form using HTML from https://formsubmit.co/ (this is not created by me)
 contact_form = f"""
-<form action="https://formsubmit.co/e602574ee8e29907086e89985fc692e2" method="POST">
+<form action="https://formsubmit.co/saaight519@deltalearns.ca" method="POST">
     <input type="hidden" name="_captcha" value="false">
     <input type="text" name="name" placeholder="Your name" required>
     <input type="text" name="organization" placeholder="Your organization (if applicable)">
