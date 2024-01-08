@@ -109,7 +109,6 @@ st.write("**Please use the form below for providing any additional feedback or r
 
 # Create a contact form using HTML from https://formsubmit.co/ (this is not created by me)
 contact_form = f"""
-<iframe src="https://https://feedbackform-saaigh.streamlitapp.com/?someparam=value&embedded=true" style="height: 100%; width:100%;">
 <form action="https://formsubmit.co/e602574ee8e29907086e89985fc692e2" method="POST">
     <input type="hidden" name="_captcha" value="false">
     <input type="text" name="name" placeholder="Your name" required>
@@ -118,7 +117,6 @@ contact_form = f"""
     <textarea name="message" placeholder="Any feedback/suggestions"></textarea>
     <button type="submit">Send</button>
 </form>
-</iframe>
 """
 
 st.markdown(contact_form, unsafe_allow_html=True)
