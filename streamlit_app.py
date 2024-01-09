@@ -107,7 +107,7 @@ else:
 
 st.write("**Please use the form below for providing any additional feedback or reporting glitches.**")
 
-current_url = st.url_request
+current_url = "https://feedbackform-saaigh.streamlit.app/"
 
 # Create a contact form using HTML from https://formsubmit.co/ (this is not created by me)
 contact_form = f"""
