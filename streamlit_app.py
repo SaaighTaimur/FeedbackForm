@@ -5,6 +5,9 @@ import json
 import requests
 import database as db
 
+import streamlit.ReportThread as ReportThread
+from streamlit.server.server import Server
+
 
 # Store the page icon and title in variables
 PAGE_TITLE = "Feedback Form"
@@ -105,12 +108,19 @@ else:
 
 ### ADDITIONAL FEEDBACK FORM
 
-current_url = st.url_request
-st.write(f"Current URL: {current_url}")
+
 
 st.write("**Please use the form below for providing any additional feedback or reporting glitches.**")
 
-current_url = "https://feedbackform-saaigh.streamlit.app/"
+def get_current_url():
+    session_id = ReportThread.get_report_ctx().session_id
+    server = Server.get_current()
+    url = server.get_url()
+    return url
+
+# Get the current URL
+current_url = get_current_url()
+st.write(f"Current URL: {current_url}")
 
 # Create a contact form using HTML from https://formsubmit.co/ (this is not created by me)
 contact_form = f"""
