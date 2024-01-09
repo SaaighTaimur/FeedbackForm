@@ -111,6 +111,7 @@ st.write("**Please use the form below for providing any additional feedback or r
 contact_form = f"""
 <form action="https://formsubmit.co/e602574ee8e29907086e89985fc692e2" method="POST">
     <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://feedbackform-saaigh.streamlit.app/">
     <input type="text" name="name" placeholder="Your name" required>
     <input type="text" name="organization" placeholder="Your organization (if applicable)">
     <input type="email" name="email" required placeholder="Your email" required>
