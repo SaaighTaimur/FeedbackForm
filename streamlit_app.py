@@ -105,6 +105,9 @@ else:
 
 ### ADDITIONAL FEEDBACK FORM
 
+current_url = st.url_request
+st.write(f"Current URL: {current_url}")
+
 st.write("**Please use the form below for providing any additional feedback or reporting glitches.**")
 
 current_url = "https://feedbackform-saaigh.streamlit.app/"
